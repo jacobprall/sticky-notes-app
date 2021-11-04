@@ -2,24 +2,27 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { v4 as uuidv4 } from "uuid";
 import StickyNote from './components/StickyNote/StickyNote'
+import ContextMenu from "./components/ContextMenu/ContextMenu";
+
+const defaultColorHex = '#F3E779 '
 
 function App() {
   const [stickies, setStickies] = useState(
     JSON.parse(localStorage.getItem("stickies")) || []
   );
 
-  const newSticky = () => {
+  const newSticky = (x = 100, y = 0) => {
       const newStickyNote = {
         id: uuidv4(),
         stickyText: "",
-        defaultPos: { x: 100, y: 0 },
+        defaultPos: { x: parseInt(x) - 200, y: parseInt(y) - 200 },
+        color: { background: defaultColorHex }
       };
       setStickies((stickies) => [...stickies, newStickyNote]);
   };
 
-  const handleNewSticky = (e) => {
-    e.preventDefault();
-    newSticky();
+  const handleNewSticky = (x, y) => {
+    newSticky(x, y);
   }
 
   useEffect(() => {
@@ -32,21 +35,33 @@ function App() {
     setStickies(newStickies);
   };
 
+  const updateColor = (color, id) => {
+    let newStickies = [...stickies];
+    newStickies.map((sticky) => {
+      if (sticky.id === id) {
+        return sticky.color = color;
+      } else {
+        return sticky;
+      }
+    });
+    setStickies(newStickies);
+  }
+
   const removeSticky = (id) => {
     setStickies(stickies.filter((sticky) => sticky.id !== id));
   };
 
   return (
-    <div className="App">
-      <div id="new-sticky">
-        <button onClick={(e) => handleNewSticky(e)}>+</button>
+      <div className="App">
+        <div className="App__container">
+        <ContextMenu handleNewSticky={handleNewSticky} />
+        {stickies.map((sticky, i) => {
+          return (
+            <StickyNote sticky={sticky} updateColor={updateColor} removeSticky={removeSticky} updatePos={updatePos} i={i} />
+          );
+        })}
+        </div>
       </div>
-      {stickies.map((sticky, i) => {
-        return (
-          <StickyNote sticky={sticky} removeSticky={removeSticky} updatePos={updatePos} i={i} />
-        );
-      })}
-    </div>
   );
 }
 

@@ -1,14 +1,19 @@
 import Draggable from "react-draggable";
 import { useState } from 'react';
-// import ColorPicker from '../ColorPicker/ColorPicker';
+import ColorPicker from '../ColorPicker/ColorPicker';
 import classNames from 'classnames';
 
-const StickyNote = ({ updatePos, removeSticky, sticky, i }) => {
+import './sticky-note.scss';
+
+const StickyNote = ({ updatePos, removeSticky, sticky, i, updateColor }) => {
   
   // const [color, setColor] = useState('red');
   const [text, setText] = useState('');
-
-  const stickyClassName = classNames(`sticky--${'color'}`, 'sticky');
+  const [color, setColor] = useState(sticky.color);
+  const handleColorChange = (color) => {
+    setColor(color);
+    updateColor(color, sticky.id);
+  }
     return (
       <Draggable
         key={sticky.id}
@@ -18,13 +23,18 @@ const StickyNote = ({ updatePos, removeSticky, sticky, i }) => {
         }}
         handle='#handle'
       >
-        {/* <ColorPicker setColor={setColor} color={color} /> */}
-        <div className={stickyClassName}>
-        <button id="remove" onClick={(e) => removeSticky(sticky.id)}>
-            X
-        </button>
-        <p id='handle'>...</p>
-        <input value={text} onChange={(e) => setText(e.target.value)} />
+
+        <div className='sticky' style={color}>
+          <div className="sticky__top">
+            <button id="remove" onClick={(e) => removeSticky(sticky.id)}>
+                X
+            </button>
+            <div id='handle'></div>
+          </div>
+          <div className="sticky__text">
+            <textarea value={text} onChange={(e) => setText(e.target.value)} />
+          </div>
+          <ColorPicker color={color} handleColorChange={handleColorChange} />
         </div>
       </Draggable>
     );

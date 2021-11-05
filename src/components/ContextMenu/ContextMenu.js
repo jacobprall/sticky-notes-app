@@ -2,8 +2,11 @@ import useContextMenu from '../../hooks/useContextMenu';
 import { Motion, spring } from 'react-motion';
 import './context-menu.scss';
 
-const ContextMenu = ({ handleNewSticky }) => {
+const ContextMenu = ({ handleNewSticky, active }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
+  if (!active) {
+    return <div></div>;
+  }
   return (
     <Motion
       defaultStyle={{ opacity: 0 }}

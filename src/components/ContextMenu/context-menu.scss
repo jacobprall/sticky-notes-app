@@ -1,6 +1,4 @@
 .context-menu {
-  width: 100vw;
-  height: 100vh;
   position: absolute;
 
   & a {
@@ -18,7 +16,7 @@
     transition: all 0.2s;
     border: 0px;
     cursor: pointer;
-    z-index: 10;
+    z-index: 12;
 
     &:hover {
       background-color:#4095c6;

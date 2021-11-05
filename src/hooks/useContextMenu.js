@@ -9,8 +9,8 @@ const useContextMenu = () => {
     (e) => {
       e.preventDefault();
 
-      setXPos(`${e.pageX}px`);
-      setYPos(`${e.pageY}px`);
+      setXPos(`${e.pageX + -150}px`);
+      setYPos(`${e.pageY + -100}px`);
       setShowMenu(true);
     },
     [setXPos, setYPos]

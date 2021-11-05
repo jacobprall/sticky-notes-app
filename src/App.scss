@@ -9,15 +9,16 @@
   background: #E55D87;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #5FC3E4, #E55D87);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #5FC3E4, #E55D87); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
+  overflow: hidden;
 
-.App__container {
-  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-  border-radius: 10px;
-  width: 80%;
-  height: 80%;
-  background: white;
-  position: relative;
+	&__container {
+		box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+		border-radius: 10px;
+		width: 80%;
+		height: 80%;
+		background: white;
+		position: relative;
+	}
 }
 
 .switch {
@@ -134,5 +135,35 @@ canvas {
 }
 
 .clear-buttons {
-  z-index: 14;
+	margin-top: 32px;
+	display: flex;
+	justify-content: center;
+	position: relative;
+
+	& > input {
+		position: absolute;
+		bottom: 32px;
+	}
+
+  & button {
+    display:inline-block;
+    padding:0.3em 1.2em;
+    margin:0 0.3em 0.3em 0;
+    border-radius:2em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    background-color:#E15F89;
+    text-align:center;
+    transition: all 0.2s;
+    border: 0px;
+    cursor: pointer;
+    z-index: 12;
+
+    &:hover {
+      background-color:#C8739B;
+    }
+  }
 }

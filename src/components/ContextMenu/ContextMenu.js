@@ -24,7 +24,7 @@ const ContextMenu = ({ handleNewSticky, active }) => {
                 opacity: interpolatedStyle.opacity,
               }}
             >
-                <a href="#" onClick={() => handleNewSticky(xPos, yPos)}>Create new sticky</a>
+                <a href="/" onClick={() => handleNewSticky(xPos, yPos)}>Create new sticky</a>
             </div>
           ) : (
             <></>

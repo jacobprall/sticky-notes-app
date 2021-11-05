@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useCanvas } from "../../hooks/useContextCanvas";
 
@@ -12,8 +11,7 @@ const Canvas = ({ active }) => {
   } = useCanvas();
 
   useEffect(() => {
-    const appContainer = document.getElementById('app-container');
-    prepareCanvas(appContainer);
+    prepareCanvas();
   }, []);
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
+import "./App.scss";
 import { v4 as uuidv4 } from "uuid";
 import StickyNote from './components/StickyNote/StickyNote'
 import ContextMenu from "./components/ContextMenu/ContextMenu";
@@ -13,32 +13,11 @@ function App() {
   const readHash = () => {
     try {
       if (window.location.hash.length > 1) {
+        localStorage.setItem('stickies', JSON.stringify([]))
         const escapedJson = window.location.hash.slice(1);
         const jsonString = decodeURIComponent(escapedJson);
-        const parsedJsonUrl = JSON.parse(jsonString);
-        const oldStickies = JSON.parse(localStorage.getItem('stickies'));
-        if (oldStickies) {
-          const updatedStickies = oldStickies.map((sticky) => {
-            const urlSticky = parsedJsonUrl.find(({ id }) => id === sticky.id)
-            if (urlSticky) {
-              if (new Date(urlSticky.lastUpdated) < new Date(sticky.lastUpdated)) {
-                return urlSticky;
-              } else {
-                return sticky;
-              }
-            } else {
-              return sticky;
-            }
-          });
-          parsedJsonUrl.forEach((sticky) => {
-            if (!updatedStickies.find((updatedSticky) => updatedSticky.id === sticky.id)) {
-              console.log('hit')
-              updatedStickies.push(sticky)
-            };
-          });
-          
-          localStorage.setItem('stickies', JSON.stringify(updatedStickies));
-        }
+        const urlStickies = JSON.parse(jsonString);
+        setStickies(urlStickies);
       }
     } catch (e) {
       console.log(e);
@@ -54,7 +33,11 @@ function App() {
     document.execCommand("copy");
   }
 
-  readHash();
+
+  useEffect(() => {
+    readHash();
+  }, []);
+
 
   const [stickies, setStickies] = useState(
      JSON.parse(localStorage.getItem("stickies")) || []
@@ -65,14 +48,22 @@ function App() {
   const [encodedUrl, setEncodedUrl] = useState('');
 
   const newSticky = (x = 100, y = 0) => {
-      const newStickyNote = {
-        id: uuidv4(),
-        stickyText: "",
-        defaultPos: { x: parseInt(x) - 200, y: parseInt(y) - 200 },
-        color: { background: defaultColorHex },
-        lastUpdated: (new Date()).toString()
-      };
-      setStickies((stickies) => [...stickies, newStickyNote]);
+    const appContainer = document.getElementById('app-container');
+    console.log(appContainer);
+    let _x;
+    if (x < appContainer.top) {
+      _x = appContainer.top;
+    } else {
+      _x = x;
+    }
+    const newStickyNote = {
+      id: uuidv4(),
+      stickyText: "",
+      defaultPos: { x: parseInt(_x) - 200, y: parseInt(y) + 100 },
+      color: { background: defaultColorHex },
+      lastUpdated: (new Date()).toString()
+    };
+    setStickies((stickies) => [...stickies, newStickyNote]);
   };
 
   const handleNewSticky = (x, y) => {
@@ -86,41 +77,28 @@ function App() {
   useEffect(() => {
     const copyButton = document.getElementById('link-copy-button');
     copyButton.addEventListener('click', getLink);
-  }, [])
+  }, []);
 
-  const updatePos = (pos, index) => {
-    let newStickies = [...stickies];
-    newStickies[index].defaultPos = { x: pos.x, y: pos.y };
-    newStickies[index].lastUpdated = (new Date()).toString();
-    setStickies(newStickies);
-  };
-
-  const updateColor = (color, id) => {
-    let newStickies = [...stickies];
-    newStickies.map((sticky) => {
+  const updateSticky = ({ pos, color, text, id }) => {
+    const updatedStickies = [...stickies].map((sticky) => {
       if (sticky.id === id) {
-        sticky.color = color;
+        if (pos) {
+          sticky.defaultPos = { x: pos.x, y: pos.y };
+        }
+        if (color) {
+          sticky.color = color;
+        }
+        if (text) {
+          sticky.stickyText = text;
+        }
         sticky.lastUpdated = (new Date()).toString();
         return sticky;
       } else {
         return sticky;
       }
     });
-    setStickies(newStickies);
-  }
-
-  const updateStickyText = (text, id) => {
-    let newStickies = [...stickies];
-    newStickies.map((sticky) => {
-      if (sticky.id === id) {
-        sticky.stickyText = text;
-        sticky.lastUpdated = (new Date()).toString();
-        return sticky;
-      } else {
-        return sticky;
-      }
-    })
-    setStickies(newStickies);
+    setStickies(updatedStickies);
+    window.history.replaceState(null, null, ' ');
   }
 
   const clearStickies = () => {
@@ -142,9 +120,9 @@ function App() {
           </label>
           <Canvas active={canvasActive} />
           <ContextMenu handleNewSticky={handleNewSticky} active={!canvasActive}/>
-          {stickies.map((sticky, i) => {
+          {stickies.map((sticky) => {
             return (
-              <StickyNote sticky={sticky} updateColor={updateColor} removeSticky={removeSticky} updatePos={updatePos} updateStickyText={updateStickyText} i={i} />
+              <StickyNote sticky={sticky} updateSticky={updateSticky} removeSticky={removeSticky}  />
             );
           })}
         </div>

@@ -6,7 +6,6 @@ import './sticky-note.scss';
 
 const StickyNote = ({ removeSticky, sticky, updateSticky }) => {
   
-  // const [color, setColor] = useState('red');
   const [text, setText] = useState(sticky.stickyText);
   const [color, setColor] = useState(sticky.color);
   const { id, defaultPos } = sticky

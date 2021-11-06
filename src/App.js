@@ -48,18 +48,10 @@ function App() {
   const [encodedUrl, setEncodedUrl] = useState('');
 
   const newSticky = (x = 100, y = 0) => {
-    const appContainer = document.getElementById('app-container');
-    console.log(appContainer);
-    let _x;
-    if (x < appContainer.top) {
-      _x = appContainer.top;
-    } else {
-      _x = x;
-    }
     const newStickyNote = {
       id: uuidv4(),
       stickyText: "",
-      defaultPos: { x: parseInt(_x) - 200, y: parseInt(y) + 100 },
+      defaultPos: { x: parseInt(x) - 200, y: parseInt(y) + 100 },
       color: { background: defaultColorHex },
       lastUpdated: (new Date()).toString()
     };

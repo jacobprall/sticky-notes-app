@@ -8,7 +8,7 @@ export const CanvasProvider = ({ children }) => {
   const contextRef = useRef(null);
   
 
-  const prepareCanvas = (appContainer) => {
+  const prepareCanvas = () => {
     const canvas = canvasRef.current
     canvas.width = window.innerWidth * 2;
     canvas.height = window.innerHeight * 2;
